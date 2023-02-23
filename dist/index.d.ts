@@ -99,7 +99,7 @@ interface INotifier {
      * @param type
      * 		The type of the notification (optional).
      */
-    sendNotification(name: string, body?: any, type?: string): void;
+    sendNotification(name: string, body?: any, type?: string): Promise<void>;
     /**
      * Initialize this INotifier instance.
      *
@@ -126,7 +126,7 @@ interface ICommand extends INotifier {
      * @param notification
      * 		The <code>INotification</code> to handle.
      */
-    execute(notification: INotification): void;
+    execute(notification: INotification): Promise<void>;
 }
 interface CommandConstructor {
     new (args?: any): ICommand;
@@ -160,7 +160,7 @@ interface IController {
      * @param notification
      * 		The <code>INotification</code> the command will receive as parameter.
      */
-    executeCommand(notification: INotification): void;
+    executeCommand(notification: INotification): Promise<void>;
     /**
      * Register a particular <code>ICommand</code> class as the handler for a particular
      * <code>INotification</code>.
@@ -283,7 +283,7 @@ interface IMediator extends INotifier {
      * @param notification
      * 		The notification instance to be handled.
      */
-    handleNotification(notification: INotification): void;
+    handleNotification(notification: INotification): Promise<void>;
     /**
      * Called by the View when the Mediator is registered. This method has to be overridden
      * by the subclass to know when the instance is registered.
@@ -371,7 +371,7 @@ interface IFacade extends INotifier {
         * @param commandClassRef
         * 		A reference to the constructor of the <code>ICommand</code>.
         */
-    registerCommand(notificationName: string, commandClassRef: Function): void;
+    registerCommand(notificationName: string, commandClassRef: CommandConstructor): void;
     /**
      * Remove a previously registered <code>ICommand</code> to <code>INotification</code>
      * mapping from the <code>Controller</code>.
@@ -483,7 +483,7 @@ interface IFacade extends INotifier {
      * 		The <code>INotification</code> to have the <code>IView</code> notify
      *		<code>IObserver</code>s	of.
         */
-    notifyObservers(notification: INotification): void;
+    notifyObservers(notification: INotification): Promise<void>;
 }
 
 /**
@@ -592,7 +592,7 @@ interface IObserver {
      * 		The <code>INotification</code> to pass to the interested object's notification
      * 		method.
      */
-    notifyObserver(notification: INotification): void;
+    notifyObserver(notification: INotification): Promise<void>;
     /**
      * Compare an object to the notification context.
      *
@@ -792,7 +792,7 @@ declare class Controller implements IController {
      * @param notification
      * 		The <code>INotification</code> the command will receive as parameter.
      */
-    executeCommand(notification: INotification): void;
+    executeCommand(notification: INotification): Promise<void>;
     /**
      * Register a particular <code>ICommand</code> class as the handler for a particular
      * <code>INotification</code>.
@@ -1062,7 +1062,7 @@ declare class View implements IView {
      * @param notification
      * 		The <code>INotification</code> to notify <code>IObserver</code>s of.
      */
-    notifyObservers(notification: INotification): void;
+    notifyObservers(notification: INotification): Promise<void>;
     /**
      * Register an <code>IMediator</code> instance with the <code>View</code>.
      *
@@ -1286,7 +1286,7 @@ declare class Notifier implements INotifier {
      * @param type
      * 		The type of the notification.
      */
-    sendNotification(name: string, body?: unknown, type?: string): void;
+    sendNotification(name: string, body?: unknown, type?: string): Promise<void>;
     /**
      * Return the multiton <code>Facade</code> instance.
      *
@@ -1379,7 +1379,7 @@ declare class Observer<ContextType = any> implements IObserver {
      * 		The <code>INotification</code> to pass to the interested object's notification
      * 		method.
      */
-    notifyObserver(notification: INotification): void;
+    notifyObserver(notification: INotification): Promise<void>;
     /**
      * Compare an object to the notification context.
      *
@@ -1409,7 +1409,7 @@ declare class SimpleCommand extends Notifier implements ICommand, INotifier {
      * @param notification
      * 		The <code>INotification</code> to handle.
      */
-    execute(notification: INotification): void;
+    execute(notification: INotification): Promise<void>;
 }
 
 /**
@@ -1437,7 +1437,7 @@ declare class MacroCommand extends Notifier implements ICommand, INotifier {
      *
      * If your subclass does define a constructor, be  sure to call <code>super()</code>.
      */
-    constructor();
+    constructor(sequentialExeuction?: boolean);
     /**
      * Initialize the <code>MacroCommand</code>.
      *
@@ -1483,7 +1483,7 @@ declare class MacroCommand extends Notifier implements ICommand, INotifier {
      *
      * @final
      */
-    execute(notification: INotification): void;
+    execute(notification: INotification): Promise<void>;
 }
 
 /**
@@ -1606,7 +1606,7 @@ declare class Facade implements IFacade {
      * @param commandClassRef
      * 		A reference to the constructor of the <code>ICommand</code>.
      */
-    registerCommand(notificationName: string, commandClassRef: Function): void;
+    registerCommand(notificationName: string, commandClassRef: CommandConstructor): void;
     /**
      * Remove a previously registered <code>ICommand</code> to <code>INotification</code>
      * mapping from the <code>Controller</code>.
@@ -1720,7 +1720,7 @@ declare class Facade implements IFacade {
      * 		The <code>INotification</code> to have the <code>IView</code> notify
      *		<code>IObserver</code>s	of.
      */
-    notifyObservers(notification: INotification): void;
+    notifyObservers(notification: INotification): Promise<void>;
     /**
      * Create and send an <code>INotification</code>.
      *
@@ -1735,7 +1735,7 @@ declare class Facade implements IFacade {
      * @param type
      *		The type of the notification to send.
      */
-    sendNotification(name: string, body?: unknown, type?: string): void;
+    sendNotification(name: string, body?: unknown, type?: string): Promise<void>;
     /**
      * Set the multiton key for this <code>Facade</code> instance.
      *
@@ -1857,7 +1857,7 @@ declare class Mediator<ViewComponentType> extends Notifier implements IMediator,
      * @param notification
      * 		The notification instance to be handled.
      */
-    handleNotification(notification: INotification): void;
+    handleNotification(notification: INotification): Promise<void>;
     /**
      * Called by the View when the Mediator is registered. This method has to be overridden
      * by the subclass to know when the instance is registered.

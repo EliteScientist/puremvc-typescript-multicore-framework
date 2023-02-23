@@ -395,7 +395,7 @@
          * @param notification
          * 		The <code>INotification</code> to notify <code>IObserver</code>s of.
          */
-        notifyObservers(notification) {
+        async notifyObservers(notification) {
             const notificationName = notification.getName();
             const observersRef = this.#observerMap.get(notificationName);
             if (observersRef) {
@@ -404,7 +404,7 @@
                 const length = observers.length;
                 for (let i = 0; i < length; i++) {
                     const observer = observers[i];
-                    observer.notifyObserver(notification);
+                    await observer.notifyObserver(notification);
                 }
             }
         }
@@ -837,9 +837,9 @@
          * 		The <code>INotification</code> to have the <code>IView</code> notify
          *		<code>IObserver</code>s	of.
          */
-        notifyObservers(notification) {
+        async notifyObservers(notification) {
             if (this.#view)
-                this.#view.notifyObservers(notification);
+                return this.#view.notifyObservers(notification);
         }
         /**
          * Create and send an <code>INotification</code>.
@@ -855,8 +855,8 @@
          * @param type
          *		The type of the notification to send.
          */
-        sendNotification(name, body, type) {
-            this.notifyObservers(new Notification(name, body, type));
+        async sendNotification(name, body, type) {
+            return this.notifyObservers(new Notification(name, body, type));
         }
         /**
          * Set the multiton key for this <code>Facade</code> instance.
@@ -995,9 +995,9 @@
          * @param type
          * 		The type of the notification.
          */
-        sendNotification(name, body, type) {
+        async sendNotification(name, body, type) {
             if (this.facade())
-                this.facade().sendNotification(name, body, type);
+                return this.facade().sendNotification(name, body, type);
         }
         /**
          * Return the multiton <code>Facade</code> instance.
@@ -1113,8 +1113,8 @@
          * 		The <code>INotification</code> to pass to the interested object's notification
          * 		method.
          */
-        notifyObserver(notification) {
-            this.getNotifyMethod()?.call(this.getNotifyContext(), notification);
+        async notifyObserver(notification) {
+            await this.getNotifyMethod()?.call(this.getNotifyContext(), notification);
         }
         /**
          * Compare an object to the notification context.
@@ -1222,7 +1222,7 @@
          * @param notification
          * 		The <code>INotification</code> the command will receive as parameter.
          */
-        executeCommand(notification) {
+        async executeCommand(notification) {
             /*
                 * Typed any here instead of <code>Function</code> ( won't compile if set to Function
                 * because today the compiler consider that <code>Function</code> is not newable and
@@ -1232,7 +1232,7 @@
             if (commandClass) {
                 const command = new commandClass();
                 command.initializeNotifier(this.multitonKey);
-                command.execute(notification);
+                return command.execute(notification);
             }
         }
         /**
@@ -1343,7 +1343,7 @@
          * @param notification
          * 		The <code>INotification</code> to handle.
          */
-        execute(notification) {
+        async execute(notification) {
         }
     }
 
@@ -1369,6 +1369,7 @@
          * @protected
          */
         #subCommands;
+        #sequentialExecution;
         /**
          * Constructs a <code>MacroCommand</code> instance.
          *
@@ -1377,8 +1378,9 @@
          *
          * If your subclass does define a constructor, be  sure to call <code>super()</code>.
          */
-        constructor() {
+        constructor(sequentialExeuction = false) {
             super();
+            this.#sequentialExecution = sequentialExeuction;
             this.#subCommands = [];
             this.initializeMacroCommand();
         }
@@ -1430,13 +1432,22 @@
          *
          * @final
          */
-        execute(notification) {
+        async execute(notification) {
             const subCommands = this.#subCommands.slice(0);
-            for (let i = 0; i < subCommands.length; i++) {
-                const commandClass = subCommands[i];
-                const commandInstance = new commandClass();
-                commandInstance.initializeNotifier(this.multitonKey);
-                commandInstance.execute(notification);
+            if (!this.#sequentialExecution) {
+                await Promise.allSettled(this.#subCommands.map((commandClass) => {
+                    const commandInstance = new commandClass();
+                    commandInstance.initializeNotifier(this.multitonKey);
+                    return commandInstance.execute(notification);
+                }));
+            }
+            else {
+                for (let i = 0; i < subCommands.length; i++) {
+                    const commandClass = subCommands[i];
+                    const commandInstance = new commandClass();
+                    commandInstance.initializeNotifier(this.multitonKey);
+                    await commandInstance.execute(notification);
+                }
             }
         }
     }
@@ -1531,7 +1542,7 @@
          * @param notification
          * 		The notification instance to be handled.
          */
-        handleNotification(notification) {
+        async handleNotification(notification) {
         }
         /**
          * Called by the View when the Mediator is registered. This method has to be overridden

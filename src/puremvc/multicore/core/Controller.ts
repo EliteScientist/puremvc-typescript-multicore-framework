@@ -118,7 +118,7 @@ export class Controller
 		{
 			const command:ICommand = new commandClass();
 			command.initializeNotifier( this.multitonKey );
-			await command.execute(notification);
+			return command.execute(notification);
 		}
 	}
 
