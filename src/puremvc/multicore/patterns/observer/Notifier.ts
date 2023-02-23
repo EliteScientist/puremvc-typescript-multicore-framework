@@ -76,10 +76,10 @@ export class Notifier
 	 * @param type
 	 * 		The type of the notification.
 	 */
-	public sendNotification(name:string, body?: unknown, type?:string):void
+	public async sendNotification(name:string, body?: unknown, type?:string): Promise<void>
 	{
 		if (this.facade()) 
-			this.facade().sendNotification( name, body, type );
+			return this.facade().sendNotification( name, body, type );
 	}
 
 	/**

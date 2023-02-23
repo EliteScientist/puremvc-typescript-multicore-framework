@@ -105,7 +105,7 @@ export class Controller
 	 * @param notification
 	 * 		The <code>INotification</code> the command will receive as parameter.
 	 */
-	public executeCommand( notification:INotification ):void
+	public async executeCommand( notification:INotification ): Promise<void>
 	{
 		/*
 			* Typed any here instead of <code>Function</code> ( won't compile if set to Function
@@ -114,11 +114,11 @@ export class Controller
 			*/
 		const commandClass = this.commandMap.get(notification.getName());
 
-		if( commandClass )
+		if (commandClass)
 		{
 			const command:ICommand = new commandClass();
 			command.initializeNotifier( this.multitonKey );
-			command.execute( notification );
+			await command.execute(notification);
 		}
 	}
 
@@ -143,7 +143,7 @@ export class Controller
 	public registerCommand( notificationName:string, commandClass:CommandConstructor ):void
 	{
 		if( !this.commandMap.has(notificationName) )
-			this.view?.registerObserver( notificationName, new Observer( this.executeCommand, this ) );
+			this.view?.registerObserver( notificationName, new Observer(this.executeCommand, this ) );
 
 		this.commandMap.set(notificationName, commandClass);
 	}

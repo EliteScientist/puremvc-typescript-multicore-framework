@@ -151,7 +151,7 @@ export class View
 	 * @param notification
 	 * 		The <code>INotification</code> to notify <code>IObserver</code>s of.
 	 */
-	public notifyObservers( notification:INotification ): void
+	public async notifyObservers( notification:INotification ): Promise<void>
 	{
 		const notificationName:string = notification.getName();
 
@@ -167,7 +167,7 @@ export class View
 			for (let i = 0; i < length; i++)
 			{
 				const observer = observers[i];
-				observer.notifyObserver(notification);
+				await observer.notifyObserver(notification);
 			}
 		}
 	}

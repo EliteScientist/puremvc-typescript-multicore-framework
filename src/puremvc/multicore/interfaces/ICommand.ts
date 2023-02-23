@@ -17,7 +17,7 @@ export interface ICommand
 	 * @param notification
 	 * 		The <code>INotification</code> to handle.
 	 */
-	execute( notification:INotification ):void;
+	execute( notification:INotification ): Promise<void>;
 }
 
 export interface CommandConstructor

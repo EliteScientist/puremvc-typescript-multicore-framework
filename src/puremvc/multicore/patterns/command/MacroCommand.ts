@@ -26,6 +26,8 @@ export class MacroCommand
 	 * @protected
 	 */
 	#subCommands: CommandConstructor[];
+
+	#sequentialExecution: boolean;
 	
 	/**
 	 * Constructs a <code>MacroCommand</code> instance.
@@ -35,10 +37,11 @@ export class MacroCommand
 	 *
 	 * If your subclass does define a constructor, be  sure to call <code>super()</code>.
 	 */
-	constructor()
+	constructor(sequentialExeuction: boolean = false)
 	{
 		super();
 
+		this.#sequentialExecution = sequentialExeuction;
 		this.#subCommands = [];
 		this.initializeMacroCommand();
 	}
@@ -96,17 +99,30 @@ export class MacroCommand
 	 *
 	 * @final
 	 */
-	public execute( notification:INotification ):void
+	public async execute( notification:INotification ): Promise<void>
 	{
 		const subCommands = this.#subCommands.slice(0);
 
-		for (let i = 0; i < subCommands.length; i++ )
+		if (!this.#sequentialExecution)
 		{
-			const commandClass = subCommands[i];
-			const commandInstance:ICommand = new commandClass();
+			await Promise.allSettled(this.#subCommands.map((commandClass) =>
+			{
+				const commandInstance:ICommand = new commandClass();
 
-			commandInstance.initializeNotifier( this.multitonKey );
-			commandInstance.execute( notification );
+				commandInstance.initializeNotifier(this.multitonKey);
+				return commandInstance.execute(notification);
+			}));
+		}
+		else
+		{
+			for (let i = 0; i < subCommands.length; i++)
+			{
+				const commandClass = subCommands[i];
+				const commandInstance:ICommand = new commandClass();
+
+				commandInstance.initializeNotifier(this.multitonKey);
+				await commandInstance.execute(notification);
+			}
 		}
 	}
 }

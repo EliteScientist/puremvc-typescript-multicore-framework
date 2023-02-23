@@ -21,7 +21,7 @@ export class SimpleCommand
 	 * @param notification
 	 * 		The <code>INotification</code> to handle.
 	 */
-	public execute( notification:INotification ):void
+	public async execute( notification:INotification ): Promise<void>
 	{
 
 	}

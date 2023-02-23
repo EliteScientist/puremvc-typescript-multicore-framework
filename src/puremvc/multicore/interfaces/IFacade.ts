@@ -152,5 +152,5 @@ export interface IFacade
 	 * 		The <code>INotification</code> to have the <code>IView</code> notify
 	 *		<code>IObserver</code>s	of.
 		*/
-	notifyObservers( notification:INotification ):void;
+	notifyObservers( notification:INotification ): Promise<void>;
 }

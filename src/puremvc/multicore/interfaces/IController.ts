@@ -29,7 +29,7 @@ export interface IController
 	 * @param notification
 	 * 		The <code>INotification</code> the command will receive as parameter.
 	 */
-	executeCommand( notification:INotification ):void;
+	executeCommand( notification:INotification ): Promise<void>;
 	
 	/**
 	 * Register a particular <code>ICommand</code> class as the handler for a particular

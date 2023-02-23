@@ -107,7 +107,7 @@ export class Mediator<ViewComponentType>
 	 * @param notification
 	 * 		The notification instance to be handled.
 	 */ 
-	public handleNotification( notification:INotification ):void
+	public async handleNotification( notification:INotification ): Promise<void>
 	{
 
 	}

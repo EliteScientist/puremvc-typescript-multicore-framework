@@ -31,7 +31,7 @@ export interface INotifier
 	 * @param type
 	 * 		The type of the notification (optional).
 	 */
-	sendNotification( name:string, body?:any, type?:string ):void;
+	sendNotification( name:string, body?:any, type?:string ): Promise<void>;
 
 	/**
 	 * Initialize this INotifier instance.

@@ -71,7 +71,7 @@ export class Observer<ContextType = any>
 	 * @param notifyMethod
 	 * 		The notification (callback) method of the interested object.
 	 */
-	setNotifyMethod( notifyMethod: Function ):void
+	public setNotifyMethod( notifyMethod: Function ):void
 	{
 		this.#notify = notifyMethod;
 	}
@@ -93,7 +93,7 @@ export class Observer<ContextType = any>
 	 * @param notifyContext
 	 * 		The notification context (this) of the interested object.
 	 */
-	setNotifyContext( notifyContext: ContextType ):void
+	public setNotifyContext( notifyContext: ContextType ):void
 	{
 		this.#context = notifyContext;
 	}
@@ -105,9 +105,9 @@ export class Observer<ContextType = any>
 	 * 		The <code>INotification</code> to pass to the interested object's notification
 	 * 		method.
 	 */
-	notifyObserver( notification:INotification ):void
+	public async notifyObserver( notification:INotification ): Promise<void>
 	{
-		this.getNotifyMethod()?.call( this.getNotifyContext(), notification );
+		await this.getNotifyMethod()?.call( this.getNotifyContext(), notification );
 	}
 
 	/**

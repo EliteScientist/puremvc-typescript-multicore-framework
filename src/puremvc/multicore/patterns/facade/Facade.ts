@@ -349,10 +349,10 @@ export class Facade
 	 * 		The <code>INotification</code> to have the <code>IView</code> notify
 	 *		<code>IObserver</code>s	of.
 	 */
-	public notifyObservers ( notification:INotification ):void
+	public async notifyObservers ( notification:INotification ): Promise<void>
 	{
-		if( this.#view )
-			this.#view.notifyObservers( notification );
+		if (this.#view)
+			return this.#view.notifyObservers( notification );
 	}
 
 	/**
@@ -369,9 +369,9 @@ export class Facade
 	 * @param type
 	 *		The type of the notification to send.
 	 */
-	public sendNotification(name:string, body?: unknown, type?: string):void
+	public async sendNotification(name:string, body?: unknown, type?: string): Promise<void>
 	{
-		this.notifyObservers(new Notification(name, body, type));
+		return this.notifyObservers(new Notification(name, body, type));
 	}
 	
 	/** 
