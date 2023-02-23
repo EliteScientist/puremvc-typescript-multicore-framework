@@ -1,3 +1,4 @@
+import { CommandConstructor } from "./ICommand";
 import { IMediator } from "./IMediator";
 import { INotification } from "./INotification";
 import { INotifier } from "./INotifier";
@@ -28,7 +29,7 @@ export interface IFacade
 		* @param commandClassRef
 		* 		A reference to the constructor of the <code>ICommand</code>.
 		*/
-	registerCommand( notificationName:string, commandClassRef:Function ):void;
+	registerCommand( notificationName:string, commandClassRef:CommandConstructor ):void;
 	
 	/**
 	 * Remove a previously registered <code>ICommand</code> to <code>INotification</code>

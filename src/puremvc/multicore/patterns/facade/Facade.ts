@@ -1,7 +1,7 @@
 import { Controller } from "../../core/Controller";
 import { Model } from "../../core/Model";
 import { View } from "../../core/View";
-import { IController, IFacade, IMediator, IModel, INotification, IProxy, IView } from "../../interfaces";
+import { CommandConstructor, IController, IFacade, IMediator, IModel, INotification, IProxy, IView } from "../../interfaces";
 import { Notification } from "../observer";
 
 /**
@@ -184,7 +184,7 @@ export class Facade
 	 * @param commandClassRef
 	 * 		A reference to the constructor of the <code>ICommand</code>.
 	 */
-	public registerCommand( notificationName:string, commandClassRef:Function ):void
+	public registerCommand( notificationName:string, commandClassRef:CommandConstructor ):void
 	{
 		this.#controller.registerCommand( notificationName, commandClassRef );
 	}
