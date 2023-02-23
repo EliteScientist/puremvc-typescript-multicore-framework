@@ -1,0 +1,45 @@
+{
+  "name": "puremvc",
+  "version": "1.1.5",
+  "description": "PureMVC Multicore Framework",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    "import": "./dist/index.esm.js",
+    "require": "./dist/index.umd.js"
+  },
+  "bin": {
+    "puremvc": "bin/puremvc-typescript-multicore-1.1-min.js"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "rollup --config",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EliteScientist/puremvc-typescript-multicore-framework.git"
+  },
+  "author": "Michael Rochelle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EliteScientist/puremvc-typescript-multicore-framework/issues"
+  },
+  "homepage": "https://github.com/EliteScientist/puremvc-typescript-multicore-framework#readme",
+  "dependencies": {
+    "@rollup/plugin-terser": "^0.4.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@types/jest": "^29.4.0",
+    "jest": "^29.4.3",
+    "jest-environment-jsdom": "^29.4.3",
+    "rollup": "^3.17.2",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-dts": "^5.2.0",
+    "ts-jest": "^29.0.5",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.5.0",
+    "typescript": "^4.9.5"
+  }
+}
