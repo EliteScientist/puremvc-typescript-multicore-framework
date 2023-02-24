@@ -996,8 +996,8 @@
          * 		The type of the notification.
          */
         async sendNotification(name, body, type) {
-            if (this.facade())
-                return this.facade().sendNotification(name, body, type);
+            if (this.facade)
+                return this.facade.sendNotification(name, body, type);
         }
         /**
          * Return the multiton <code>Facade</code> instance.
@@ -1008,7 +1008,7 @@
          * @throws
          *		Throws an error if the multiton key for this Notifier is not yet initialized.
          */
-        facade() {
+        get facade() {
             if (this.#multitonKey === null)
                 throw Error(Notifier.MULTITON_MSG);
             return Facade.getInstance(this.#multitonKey);

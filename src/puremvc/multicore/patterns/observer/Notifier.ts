@@ -78,8 +78,8 @@ export class Notifier
 	 */
 	public async sendNotification(name:string, body?: unknown, type?:string): Promise<void>
 	{
-		if (this.facade()) 
-			return this.facade().sendNotification( name, body, type );
+		if (this.facade) 
+			return this.facade.sendNotification( name, body, type );
 	}
 
 	/**
@@ -91,7 +91,7 @@ export class Notifier
 	 * @throws
 	 *		Throws an error if the multiton key for this Notifier is not yet initialized.
 	 */
-	public facade(): IFacade
+	public get facade(): IFacade
 	{
 		if (this.#multitonKey === null )
 			throw Error( Notifier.MULTITON_MSG );

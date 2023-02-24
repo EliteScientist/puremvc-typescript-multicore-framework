@@ -58,7 +58,7 @@ module test
 		 */
 		handleNotification( notification:puremvc.INotification )
 		{
-			this.facade().removeMediator(this.getMediatorName());
+			this.facade.removeMediator(this.getMediatorName());
 		}
 
 		/**

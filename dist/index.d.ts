@@ -1296,7 +1296,7 @@ declare class Notifier implements INotifier {
      * @throws
      *		Throws an error if the multiton key for this Notifier is not yet initialized.
      */
-    facade(): IFacade;
+    get facade(): IFacade;
     /**
      * Message Constants
      *
