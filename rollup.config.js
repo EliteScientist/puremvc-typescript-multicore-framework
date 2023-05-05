@@ -12,8 +12,8 @@ export default [
 				format: "es"
 			},
 			{
-				file: "dist/index.umd.js",
-				format: "umd",
+				file: "dist/index.cjs.js",
+				format: "cjs",
 				name: "puremvc"
 			}
 		],
